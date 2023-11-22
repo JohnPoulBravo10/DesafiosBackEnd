@@ -1,3 +1,4 @@
+
 import fs from 'fs';
 
 export default class ProductManager {
@@ -5,8 +6,6 @@ export default class ProductManager {
     this.path = filePath;
     this.products = [];
     this.nextId = 1;
-
-    
   }
 
   async addProduct(title, description, price, thumbnail, code, stock) {
@@ -31,13 +30,13 @@ export default class ProductManager {
     }
   }
 
-  getProducts() {
-    this.cargarProductos()
+  async getProducts() {
+    await this.cargarProductos();
     return this.products;
   }
 
-  getProductById(id) {
-    this.cargarProductos()
+  async getProductById(id) {
+    await this.cargarProductos();
     const product = this.products.find((prod) => prod.id === id);
     if (product) {
       return product;
@@ -48,7 +47,7 @@ export default class ProductManager {
   }
 
   async updateProduct(id, updatedProduct) {
-    this.cargarProductos()
+    await this.cargarProductos();
     const index = this.products.findIndex((product) => product.id === id);
     if (index !== -1) {
       updatedProduct.id = id;
@@ -61,7 +60,7 @@ export default class ProductManager {
   }
 
   async deleteProduct(id) {
-    this.cargarProductos()
+    await this.cargarProductos();
     const index = this.products.findIndex((product) => product.id === id);
     if (index !== -1) {
       this.products.splice(index, 1);
@@ -72,21 +71,19 @@ export default class ProductManager {
     }
   }
 
-  
   async cargarProductos() {
     try {
       const data = await fs.promises.readFile(this.path, 'utf-8');
       this.products = JSON.parse(data);
       this.nextId =
         this.products.length > 0
-          ? this.products[this.products.length] + 1
+          ? this.products[this.products.length - 1].id + 1
           : 1;
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   }
 
- 
   async guardarProductos() {
     await fs.promises.writeFile(this.path, JSON.stringify(this.products, null, "\t"), 'utf-8');
   }

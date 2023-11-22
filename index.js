@@ -1,14 +1,13 @@
+
 import fs from 'fs';
-import  ProductManager  from './ProductManager.js'; 
+import ProductManager from './ProductManager.js';
 
 (async () => {
-  const filePath = 'productos.json'; 
+  const filePath = 'productos.json';
   const listaProductos = new ProductManager(filePath);
 
+  console.log("Productos al inicio:", await listaProductos.getProducts());
 
-  console.log("Productos al inicio:", listaProductos.getProducts());
-
-  
   const addProductResult = await listaProductos.addProduct(
     "producto prueba",
     "Este es un producto prueba",
@@ -19,26 +18,23 @@ import  ProductManager  from './ProductManager.js';
   );
   console.log(addProductResult);
 
- 
-  console.log("Productos después de agregar uno:", listaProductos.getProducts());
+  console.log("Productos después de agregar uno:", await listaProductos.getProducts());
 
-
-  const productId = 1; 
+  const productId = 1;
   try {
-    const productById = listaProductos.getProductById(productId);
+    const productById = await listaProductos.getProductById(productId);
     console.log("Producto encontrado por ID:", productById);
   } catch (error) {
     console.error(error.message);
   }
 
-  
   const updatedProduct = {
     title: "Producto Actualizado",
     description: "Descripción Actualizada",
-    price: 250, 
+    price: 250,
     thumbnail: "Nueva imagen",
     code: "abc123",
-    stock: 30, 
+    stock: 30,
   };
 
   try {
@@ -48,12 +44,11 @@ import  ProductManager  from './ProductManager.js';
     console.error(error.message);
   }
 
-  
-  try {
+  /*try {
     const deleteProductResult = await listaProductos.deleteProduct(productId);
     console.log(deleteProductResult);
-    console.log("Productos después de eliminar uno:", listaProductos.getProducts());
+    console.log("Productos después de eliminar uno:", await listaProductos.getProducts());
   } catch (error) {
     console.error(error.message);
-  }
+  }*/
 })();
